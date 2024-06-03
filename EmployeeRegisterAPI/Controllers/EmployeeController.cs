@@ -33,7 +33,9 @@ namespace EmployeeRegisterAPI.Controllers
                 {
                     EmployeeID = x.EmployeeID,
                     EmployeeName = x.EmployeeName,
+                    Comment = x.Comment,                    
                     Occupation = x.Occupation,
+                    Rating = x.Rating,
                     ImageName = x.ImageName,
                     ImageSrc = String.Format("{0}://{1}{2}/Images/{3}", Request.Scheme, Request.Host, Request.PathBase, x.ImageName)
                 })

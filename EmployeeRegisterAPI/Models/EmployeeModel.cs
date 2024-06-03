@@ -22,6 +22,16 @@ namespace EmployeeRegisterAPI.Models
         [Column(TypeName = "nvarchar(100)")]
         public string ImageName { get; set; }
 
+        [Column(TypeName = "nvarchar(600)")]
+        public string Comment { get; set; }
+
+
+
+        [Column(TypeName = "int")]
+        public int Rating { get; set; }
+
+
+
         [NotMapped]
         public IFormFile ImageFile { get; set; }
 

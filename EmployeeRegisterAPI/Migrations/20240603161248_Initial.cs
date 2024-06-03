@@ -1,20 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace EmployeeRegisterAPI.Migrations
 {
-    public partial class InitialCreate : Migration
+    /// <inheritdoc />
+    public partial class Initial : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
-                    EmployeeID = table.Column<int>(nullable: false)
+                    EmployeeID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EmployeeName = table.Column<string>(type: "nvarchar(50)", nullable: true),
                     Occupation = table.Column<string>(type: "nvarchar(50)", nullable: true),
-                    ImageName = table.Column<string>(type: "nvarchar(100)", nullable: true)
+                    ImageName = table.Column<string>(type: "nvarchar(100)", nullable: true),
+                    Comment = table.Column<string>(type: "nvarchar(600)", nullable: true),
+                    Rating = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -22,6 +28,7 @@ namespace EmployeeRegisterAPI.Migrations
                 });
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
