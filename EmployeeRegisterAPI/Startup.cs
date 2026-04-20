@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace EmployeeRegisterAPI
 {
@@ -35,19 +36,54 @@ namespace EmployeeRegisterAPI
             services.AddDbContext<EmployeeDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend",
+                    builder => builder
+                        .WithOrigins(
+                            "http://localhost:3000",
+                            "https://chriscalver.com",
+                            "https://chriscalver.com/employee-register-client"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+            });
+
+            // Register Swagger generator with basic OpenAPI info
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Employee API",
+                    Version = "v1",
+                    Description = "API for managing employees."
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(options => options.WithOrigins("http://localhost:3000")
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            app.UseCors("AllowFrontend");
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                // Enable middleware to serve generated Swagger as a JSON endpoint and Swagger UI
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Employee API V1");
+                });
+            }
+            else
+            {
+                // Enable Swagger in production if desired
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Employee API V1");
+                });
             }
 
             app.UseStaticFiles(new StaticFileOptions
